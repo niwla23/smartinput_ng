@@ -33,41 +33,41 @@ void setup() {
 void loop() {
     
     ledLoop();
-    delay(10);
+    // delay(10);
 
     // Fills kpd.key[ ] array with up-to 10 active keys.
     // Returns true if there are ANY active keys.
-    if (kpd.getKeys()) {
-        for (int i = 0; i < LIST_MAX; i++)  // Scan active keys
-        {
-            if (kpd.key[i].stateChanged)  // Only execute for changed keys
-            {
-                switch (kpd.key[i].kstate) {
-                    case PRESSED:
-                        msg = "P";
-                        keysPressedSince[kpd.key[i].kcode] = millis();
-                        break;
-                    case HOLD:
-                        msg = "L";
-                        break;
-                    case RELEASED:
-                        msg = "R";
+    // if (kpd.getKeys()) {
+    //     for (int i = 0; i < LIST_MAX; i++)  // Scan active keys
+    //     {
+    //         if (kpd.key[i].stateChanged)  // Only execute for changed keys
+    //         {
+    //             switch (kpd.key[i].kstate) {
+    //                 case PRESSED:
+    //                     msg = "P";
+    //                     keysPressedSince[kpd.key[i].kcode] = millis();
+    //                     break;
+    //                 case HOLD:
+    //                     msg = "L";
+    //                     break;
+    //                 case RELEASED:
+    //                     msg = "R";
 
-                        // this is an extra event that is triggered after the key is released and was NOT pressed for > longPressTimeMs
-                        if ((millis() - keysPressedSince[kpd.key[i].kcode]) < longPressTimeMs) {
-                            Serial.print("S");
-                            Serial.print(":");
-                            Serial.println(kpd.key[i].kcode);
-                        }
-                        break;
-                    case IDLE:
-                        continue;
-                }
-                Serial.print(msg);
-                Serial.print(":");
-                Serial.println(kpd.key[i].kcode);
-                Serial.flush();
-            }
-        }
-    } 
+    //                     // this is an extra event that is triggered after the key is released and was NOT pressed for > longPressTimeMs
+    //                     if ((millis() - keysPressedSince[kpd.key[i].kcode]) < longPressTimeMs) {
+    //                         Serial.print("S");
+    //                         Serial.print(":");
+    //                         Serial.println(kpd.key[i].kcode);
+    //                     }
+    //                     break;
+    //                 case IDLE:
+    //                     continue;
+    //             }
+    //             Serial.print(msg);
+    //             Serial.print(":");
+    //             Serial.println(kpd.key[i].kcode);
+    //             Serial.flush();
+    //         }
+    //     }
+    // } 
 }

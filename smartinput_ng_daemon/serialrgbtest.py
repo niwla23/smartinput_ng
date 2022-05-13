@@ -24,5 +24,5 @@ def send_frame(colors):
   device.flush()
 
 for i in range(255):
-  send_frame([(i, 0, 255)]*4)
+  send_frame([(i, 0, 0)]*4)
   time.sleep(0.01)

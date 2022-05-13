@@ -8,26 +8,10 @@ const uint16_t pixelsType = NEO_BRG + NEO_KHZ800;
 const uint8_t pixelsPin = D5;
 
 void ledSetup() {
-    // gRedPin = redPin;
-    // gGreenPin = greenPin;
-    // gBluePin = bluePin;
-    // pinMode(gRedPin, OUTPUT);
-    // pinMode(gGreenPin, OUTPUT);
-    // pinMode(gBluePin, OUTPUT);
     pixels = Adafruit_NeoPixel(numPixels, pixelsPin, pixelsType);
     pixels.begin();
     Serial.setTimeout(100);  // this makes sure ledLoop is not blocking the main loop for too long
 }
-
-void setColor(uint8_t red, uint8_t green, uint8_t blue) {
-    // digitalWrite(gRedPin, red);
-    // digitalWrite(gGreenPin, green);
-    // digitalWrite(gBluePin, blue);
-}
-
-const int BUFFER_SIZE = 1;
-char buf[BUFFER_SIZE];
-
 // 0 = red
 // 1 = green
 // 2 = blue
@@ -52,6 +36,7 @@ void ledLoop() {
             valueContext = RED;
             if (value == 1) {
                 pixels.show();
+                Serial.flush();
                 currentPixel = 0;
             }
         } else if (valueContext == BLUE) {
