@@ -32,27 +32,22 @@ void ledLoop() {
     while (Serial.available()) {
         int value = Serial.read();
 
-        switch (valueContext) {
-            case CONTROL:
-                valueContext = RED;
-                if (value == 1) {
-                    pixels.show();
-                    Serial.flush();
-                    currentPixel = 0;
-                }
-                break;
+        if (valueContext == CONTROL) {
+            pixels.setPixelColor(currentPixel, pixels.Color(currentColor[RED], currentColor[GREEN], currentColor[BLUE]));
 
-            case BLUE:
-                currentColor[valueContext] = value;
-                pixels.setPixelColor(currentPixel, pixels.Color(currentColor[RED], currentColor[GREEN], currentColor[BLUE]));
-                currentPixel++;
-                valueContext = CONTROL;
-                break;
+            valueContext = RED;
+            if (value == 1) {
+                pixels.show();
+                Serial.flush();
+                currentPixel = 0;
+            }
+            currentPixel++;
+            break;
 
-            default:
-                currentColor[valueContext] = value;
-                valueContext++;
-                break;
+        } else {
+            currentColor[valueContext] = value;
+            valueContext++;
+            break;
         }
     }
 }
