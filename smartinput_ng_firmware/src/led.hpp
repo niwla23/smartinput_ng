@@ -25,47 +25,43 @@ void setColor(uint8_t red, uint8_t green, uint8_t blue) {
     // digitalWrite(gBluePin, blue);
 }
 
-uint32_t ledBuffer[numPixels];
-char messageBuffer[16] = {};
-int currentPosition = 0;
+const int BUFFER_SIZE = 1;
+char buf[BUFFER_SIZE];
+
+// 0 = red
+// 1 = green
+// 2 = blue
+// 3 = control byte
+enum context_options {
+    RED,
+    GREEN,
+    BLUE,
+    CONTROL
+};
+
+// defines the current context of the value being read.
+int valueContext = RED;
 int currentPixel = 0;
+int currentColor[3] = {};
+
 void ledLoop() {
-    // pixels.setPixelColor(1, pixels.Color(0, 255, 0));
-    // pixels.show();
-    if (!Serial.available()) {
-        return;
-    }
-    String received = Serial.readString();
-    const char* received_c = received.c_str();
+    while (Serial.available()) {
+        int value = Serial.read();
 
-    for (int i = 0; i < received.length(); i++) {
-        if (received_c[i] == '\n') {
-            messageBuffer[currentPosition] = '\0';
-            Serial.print("settning color to");
-            int colorValue = atoi(messageBuffer);
-            Serial.println(colorValue);
-            Serial.print("pixel: ");
-            Serial.println(currentPixel);
-            ledBuffer[currentPixel] = colorValue;
-            Serial.println("tf?");
-            currentPixel++;
-        } else if (received_c[i] == ';') {
-            messageBuffer[currentPosition] = '\0';
-            Serial.println("showing pixels, seperator received");
-            for (size_t i = 0; i < numPixels; i++) {
-                Serial.println(ledBuffer[i]);
-                pixels.setPixelColor(i, ledBuffer[i]);
+        if (valueContext == CONTROL) {
+            valueContext = RED;
+            if (value == 1) {
+                pixels.show();
+                currentPixel = 0;
             }
-
-            pixels.show();
-            currentPosition = 0;
-            currentPixel = 0;
-            Serial.flush();
-            continue;
+        } else if (valueContext == BLUE) {
+            currentColor[valueContext] = value;
+            pixels.setPixelColor(currentPixel, pixels.Color(currentColor[RED], currentColor[GREEN], currentColor[BLUE]));
+            currentPixel++;
+            valueContext = CONTROL;
         } else {
-            Serial.println("received message, writing data to buffer");
-            messageBuffer[currentPosition] = received_c[i];
+            currentColor[valueContext] = value;
+            valueContext++;
         }
-        currentPosition++;
     }
 }
