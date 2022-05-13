@@ -1,3 +1,5 @@
+device: "85430353331351719070"
+baudrate: 9600
 keys:
   0:
     short_press:
@@ -19,7 +21,7 @@ keys:
     short_press:
       - handler: http
         params:
-          url: https://juthjiuftewihu.free.beeceptor.com
+          url: https://tg44t343.free.beeceptor.com
           method: GET
 
     long_press:

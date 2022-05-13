@@ -1,78 +1,73 @@
-#include <Arduino.h>
+#include <Keypad.h>
 
-constexpr int longPressTimeMs = 1500;
-constexpr int numKeys = 3;
-constexpr int keyPins[numKeys] = {3, 4, 5};    // GPIO pins used for switches
-constexpr int inputType[numKeys] = {0, 1, 0};  // 0 for default-off, 1 for default-on
+#include "led.hpp"
+
+const byte ROWS = 4;  // four rows
+const byte COLS = 3;  // three columns
+char keys[ROWS][COLS] = {
+    {'0', '1', '2'},
+    {'4', '5', '6'},
+    {'8', '9', 'A'},
+    {'B', 'C', '6'}};
+
+byte rowPins[ROWS] = {D1, D2, D3, D4};  // connect to the column pinouts of the kpd
+byte colPins[COLS] = {D8, D7, D6};      // arduino libs are weird. won't work in normal odrder.
+constexpr int longPressTimeMs = 1000;
+
+unsigned long keysPressedSince[ROWS * COLS] = {0};
+Keypad kpd = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
+unsigned long loopCount;
+unsigned long startTime;
+String msg;
 
 void setup() {
-    for (size_t i = 0; i < numKeys; i++) {
-        pinMode(keyPins[i], INPUT_PULLUP);
-    }
-
     Serial.begin(9600);
-}
-
-enum eventType { press,
-                 shortPress,
-                 longPress,
-                 release
-};
-
-// state of the keys. 0 means not pressed, otherwise the time of press in millis since startup is stored.
-unsigned long keysPressedSince[numKeys] = {0};
-bool keysTriggeredLongPress[numKeys] = {false};
-
-void handleEvent(int key, eventType type) {
-    if (type == press) {
-        Serial.print("P");
-    } else if (type == longPress) {
-        Serial.print("L");
-    } else if (type == shortPress) {
-        Serial.print("S");
-    } else if (type == release) {
-        Serial.print('R');
-    }
-    Serial.print(":");
-    Serial.println(key);
-    Serial.flush();
+    kpd.setHoldTime(longPressTimeMs);
+    loopCount = 0;
+    startTime = millis();
+    msg = "";
+    ledSetup();
 }
 
 void loop() {
-    for (size_t i = 0; i < numKeys; i++) {
-        unsigned long now = millis();
+    
+    ledLoop();
+    delay(10);
 
-        int pin = keyPins[i];
+    // Fills kpd.key[ ] array with up-to 10 active keys.
+    // Returns true if there are ANY active keys.
+    if (kpd.getKeys()) {
+        for (int i = 0; i < LIST_MAX; i++)  // Scan active keys
+        {
+            if (kpd.key[i].stateChanged)  // Only execute for changed keys
+            {
+                switch (kpd.key[i].kstate) {
+                    case PRESSED:
+                        msg = "P";
+                        keysPressedSince[kpd.key[i].kcode] = millis();
+                        break;
+                    case HOLD:
+                        msg = "L";
+                        break;
+                    case RELEASED:
+                        msg = "R";
 
-        int read = digitalRead(pin);
-
-        if (inputType[i] == 1) {  // invert read if we have a default-on switch
-            read = 1 - read;
-        }
-
-        unsigned long lastState = keysPressedSince[i];
-
-        if (lastState == 0) {   // last time button was not pressed
-            if (read == LOW) {  // if button is pressed now
-                keysPressedSince[i] = now;
-                handleEvent(i, press);
-            }
-        } else {                 // last time button was pressed so we have the time of press start
-            if (read == HIGH) {  // button is not pressed anymore, send release event
-                keysPressedSince[i] = 0;
-                if (!keysTriggeredLongPress[i]) { // if there was no long press, we are still in time for a short press, send event
-                    handleEvent(i, shortPress);
+                        // this is an extra event that is triggered after the key is released and was NOT pressed for > longPressTimeMs
+                        if ((millis() - keysPressedSince[kpd.key[i].kcode]) < longPressTimeMs) {
+                            Serial.print("S");
+                            Serial.print(":");
+                            Serial.println(kpd.key[i].kcode);
+                        }
+                        break;
+                    case IDLE:
+                        continue;
                 }
-                keysTriggeredLongPress[i] = false;
-                handleEvent(i, release);
-            }
-            if (read == LOW) {  // button was pressed last time AND is still pressed
-                // threshold for long press reached and long press event has not been sent yet
-                if ((now - lastState) > longPressTimeMs && !keysTriggeredLongPress[i]) {
-                    keysTriggeredLongPress[i] = true;
-                    handleEvent(i, longPress);
-                }
+                Serial.print(msg);
+                Serial.print(":");
+                Serial.println(kpd.key[i].kcode);
+                Serial.flush();
             }
         }
-    }
+    } 
 }
