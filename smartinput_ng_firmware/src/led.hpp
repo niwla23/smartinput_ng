@@ -1,15 +1,15 @@
-#include <Adafruit_NeoPixel.h>
 #include <Arduino.h>
-
-Adafruit_NeoPixel pixels;
+#include <FastLED.h>
 
 const int16_t numPixels = 4;
-const uint16_t pixelsType = NEO_BRG + NEO_KHZ800;
+const EOrder pixelsType = BRG;
 const uint8_t pixelsPin = D5;
 
+CRGB pixels[numPixels];
+
 void ledSetup() {
-    pixels = Adafruit_NeoPixel(numPixels, pixelsPin, pixelsType);
-    pixels.begin();
+    FastLED.addLeds<WS2811, pixelsPin, pixelsType>(pixels, numPixels);
+    FastLED.setCorrection(CRGB(255, 160, 240));
     Serial.setTimeout(100);  // this makes sure ledLoop is not blocking the main loop for too long
 }
 // 0 = red
@@ -25,29 +25,27 @@ enum context_options {
 
 // defines the current context of the value being read.
 int valueContext = RED;
-int currentPixel = 0;
-int currentColor[3] = {};
+size_t currentPixel = 0;
+uint8_t currentColor[3] = {};
 
 void ledLoop() {
     while (Serial.available()) {
         int value = Serial.read();
 
         if (valueContext == CONTROL) {
-            pixels.setPixelColor(currentPixel, pixels.Color(currentColor[RED], currentColor[GREEN], currentColor[BLUE]));
+            pixels[currentPixel] = CRGB(currentColor[RED], currentColor[GREEN], currentColor[BLUE]);
 
             valueContext = RED;
+            currentPixel++;
+
             if (value == 1) {
-                pixels.show();
-                Serial.flush();
+                FastLED.show();
                 currentPixel = 0;
             }
-            currentPixel++;
-            break;
 
         } else {
             currentColor[valueContext] = value;
             valueContext++;
-            break;
         }
     }
 }
