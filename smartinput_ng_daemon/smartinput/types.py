@@ -9,5 +9,5 @@ class EventType(enum.Enum):
 
 @dataclass
 class Event:
-  key: int
+  key: str
   event_type: EventType

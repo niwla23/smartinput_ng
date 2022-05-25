@@ -1,31 +1,102 @@
-device: "85430353331351719070"
-baudrate: 9600
+device: "USB VID:PID=1A86:7523 LOCATION=3-2.3"
+baudrate: 115200
 keys:
-  0:
+  "0": # play pause
     short_press:
       - handler: exec
         params:
-          command: "notify-send 'test' 'es funktioniert!'"
+          command: "playerctl play-pause"
+    long_press:
       - handler: exec
         params:
-          command: "notify-send 'test2' 'es funktioniert!'"
+          command: "playerctl next"
 
-    long_press:
-      - handler: keyboard
-        params:
-          mode: type
-          keys: "hallo das ist ein test"
-          interval: 0.1
-
-  1:
+  "1": # increase volume
     short_press:
-      - handler: http
+      - handler: exec
         params:
-          url: https://tg44t343.free.beeceptor.com
-          method: GET
-
+          command: "amixer -D pulse sset Master 5%+"
     long_press:
+      - handler: exec
+        params:
+          command: "amixer -D pulse sset Master on"
+      - handler: exec
+        params:
+          command: "notify-send 'Ton an'"
+
+  "2": # obs
+    short_press:
+      - handler: exec
+        params:
+          command: "obs"
+
+  "3": # spotify
+    short_press:
+      - handler: exec
+        params:
+          command: "xdg-open https://open.spotify.com"
+
+  "4": # kill
+    short_press:
       - handler: keyboard
         params:
           mode: shortcut
-          keys: ["ctrl", "c"]
+          keys: ["ctrl", "alt", "esc"]
+
+  "5": # mute
+    short_press:
+      - handler: exec
+        params:
+          command: "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+
+  "6": # youtube
+    short_press:
+      - handler: exec
+        params:
+          command: "xdg-open https://www.youtube.com"
+
+  "7": # circle
+    short_press:
+      - handler: exec
+        params:
+          command: "notify-send 'Nichts' 'Hier passiert wirklich rein gar nichts!'"
+
+  "8": # shutdown
+    short_press:
+      - handler: exec
+        params:
+          command: "loginctl lock-session"
+    long_press:
+      - handler: exec
+        params:
+          command: "shutdown -h now"
+
+
+
+  "9": # decrease volume
+    short_press:
+      - handler: exec
+        params:
+          command: "amixer -D pulse sset Master 5%-"
+    long_press:
+      - handler: exec
+        params:
+          command: "amixer -D pulse sset Master off"
+      - handler: exec
+        params:
+          command: "notify-send 'Ton aus'"
+
+
+  "A": # cam
+    short_press:
+      - handler: keyboard
+        params:
+          mode: shortcut
+          keys: ["p"]
+
+  "B": # replay sorcery
+    short_press:
+      - handler: keyboard
+        params:
+          mode: shortcut
+          keys: ["p"]

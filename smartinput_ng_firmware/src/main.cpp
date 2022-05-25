@@ -5,10 +5,10 @@
 const byte ROWS = 4;  // four rows
 const byte COLS = 3;  // three columns
 char keys[ROWS][COLS] = {
-    {'3', '7', '2'},
-    {'2', '6', '6'},
-    {'1', '5', '9'},
-    {'0', '4', '8'}};
+    {'8', '4', '0'},
+    {'9', '5', '1'},
+    {'A', '6', '2'},
+    {'B', '7', '3'}};
 
 byte rowPins[ROWS] = {D1, D2, D3, D4};  // connect to the column pinouts of the kpd
 byte colPins[COLS] = {D8, D7, D6};      // arduino libs are weird. won't work in normal odrder.
@@ -56,7 +56,7 @@ void loop() {
                         if ((millis() - keysPressedSince[kpd.key[i].kcode]) < longPressTimeMs) {
                             Serial.print("S");
                             Serial.print(":");
-                            Serial.println(kpd.key[i].kcode);
+                            Serial.println(kpd.key[i].kchar);
                         }
                         break;
                     case IDLE:
@@ -64,7 +64,7 @@ void loop() {
                 }
                 Serial.print(msg);
                 Serial.print(":");
-                Serial.println(kpd.key[i].kcode);
+                Serial.println(kpd.key[i].kchar);
                 Serial.flush();
             }
         }

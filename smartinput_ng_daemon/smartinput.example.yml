@@ -1,0 +1,31 @@
+device: "USB VID:PID=1A86:7523 LOCATION=3-2.3"
+baudrate: 115200
+keys:
+  "0":
+    short_press:
+      - handler: exec
+        params:
+          command: "notify-send 'test' 'es funktioniert!'"
+      - handler: exec
+        params:
+          command: "notify-send 'test2' 'es funktioniert!'"
+
+    long_press:
+      - handler: keyboard
+        params:
+          mode: type
+          keys: "hallo das ist ein test"
+          interval: 0.1
+
+  "1":
+    short_press:
+      - handler: http
+        params:
+          url: https://tg44t343.free.beeceptor.com
+          method: GET
+
+    long_press:
+      - handler: keyboard
+        params:
+          mode: shortcut
+          keys: ["ctrl", "c"]

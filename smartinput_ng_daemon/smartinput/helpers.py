@@ -4,7 +4,7 @@ import serial
 def parse_event(payload: str):
     try:
       event_type_raw, key_raw  = payload.split(":")
-      key = int(key_raw)
+      key = key_raw.rstrip()
       event_type = EventType(event_type_raw)
     except ValueError:
       return None

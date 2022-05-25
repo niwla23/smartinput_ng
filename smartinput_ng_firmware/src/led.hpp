@@ -8,7 +8,8 @@ const uint8_t pixelsPin = D5;
 CRGB pixels[numPixels];
 
 void ledSetup() {
-    FastLED.addLeds<WS2811, pixelsPin, pixelsType>(pixels, numPixels);
+    FastLED.addLeds<NEOPIXEL, pixelsPin>(pixels, numPixels);
+    FastLED.setMaxPowerInVoltsAndMilliamps(5, 100);
     FastLED.setCorrection(CRGB(255, 160, 240));
     Serial.setTimeout(100);  // this makes sure ledLoop is not blocking the main loop for too long
 }
