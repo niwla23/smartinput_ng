@@ -12,7 +12,7 @@
   },
   "tauri": {
     "allowlist": {
-      "all": true,
+      "all": false,
       "http": {
         "all": true,
         "request": true,
@@ -34,7 +34,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.niwla23.smartinput.ui",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

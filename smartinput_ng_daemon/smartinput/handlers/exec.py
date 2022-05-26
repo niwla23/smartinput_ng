@@ -4,6 +4,11 @@ import subprocess
 
 
 class ExecHandler(BaseHandler):
+    """
+    Params:
+        command: The command to execute.
+    """
+
     def __init__(self) -> None:
         self.params = {}
 

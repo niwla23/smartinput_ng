@@ -14,6 +14,9 @@ class SettingsManager:
     def get_file_path(self):
         return os.path.join(self.get_path(), 'settings.json')
 
+    def get_config_file_path(self):
+        return os.path.join(self.get_path(), 'config.yml')
+
     def get_settings(self):
         if os.path.exists(self.get_file_path()):
             with open(self.get_file_path(), 'r') as f:

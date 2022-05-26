@@ -98,12 +98,13 @@ class EffectSwitch:
         self.current_effect = None
         self.rgb_process = multiprocessing.Process(
             target=rainbow, args=(self.rgb_device,), daemon=True)
-    
+
     def load_saved_effect(self):
         config = settings_manager.get_settings()
-        if config["current_effect"]:
-            effect_name = config["current_effect"]["name"]
-            options = config["current_effect"]["options"]
+        if config.get("current_effect"):
+            effect_name = config["current_effect"]
+            options = config["effects"][effect_name]["options"]
+
             self.set_effect(effect_name, options)
 
     def set_effect(self, effect_name: str, options: dict):
@@ -115,9 +116,13 @@ class EffectSwitch:
             self.rgb_process = multiprocessing.Process(
                 target=effect["function"], args=(self.rgb_device, options), daemon=True)
             config = settings_manager.get_settings()
-            config["current_effect"] = {}
-            config["current_effect"]["name"] = effect_name
-            config["current_effect"]["options"] = options
+            config["current_effect"] = effect_name
+
+            if not config.get("effects"):
+                config["effects"] = {}
+
+            config["effects"][effect_name] = {"options": options}
+
             settings_manager.save_settings(config)
             self.rgb_process.start()
             self.current_effect = effect_name
@@ -126,10 +131,19 @@ class EffectSwitch:
 
     def get_effects_sanitized(self):
         sanitized = {}
+        config = settings_manager.get_settings()
         for effect, data in effects.items():
+            options_patched = data["options"]
+            for option, option_data in options_patched.items():
+                try:
+                    option_data["current"] = config["effects"][effect]["options"][option]
+                except KeyError:
+                    option_data["current"] = option_data["default"]
+                options_patched[option] = option_data
+
             sanitized[effect] = {
                 "friendlyName": data["friendly_name"],
                 "active": self.current_effect == effect,
-                "options": data["options"]
+                "options": options_patched
             }
         return sanitized

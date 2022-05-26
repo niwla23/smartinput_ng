@@ -14,6 +14,7 @@ rgb_switch: Optional[EffectSwitch] = None
 @app.route("/set_effect/<effect_name>", methods=["POST"])
 def set_effect(effect_name):
     if effects.get(effect_name):
+        print(request.json)
         rgb_switch.set_effect(effect_name, request.json or {})
         return jsonify({"status": "OK"})
     else:
