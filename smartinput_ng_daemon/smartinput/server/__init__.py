@@ -11,6 +11,7 @@ from smartinput.rgb.switching import effects, EffectSwitch
 app = Flask(__name__)
 rgb_switch: Optional[EffectSwitch] = None
 
+
 @app.route("/set_effect/<effect_name>", methods=["POST"])
 def set_effect(effect_name):
     if effects.get(effect_name):
@@ -20,9 +21,11 @@ def set_effect(effect_name):
     else:
         return jsonify({"error": "Effect not found"}), 404
 
+
 @app.route("/effects")
 def get_effects():
     return jsonify(rgb_switch.get_effects_sanitized())
+
 
 def run_in_thread(device: serial.Serial, host="127.0.0.1", port=12853):
     global rgb_switch

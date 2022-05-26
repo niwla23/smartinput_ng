@@ -1,0 +1,19 @@
+[Desktop Entry]
+Comment[de_DE]=
+Comment=
+Exec=smartinput_ng_ui
+GenericName[de_DE]=
+GenericName=
+Icon=smartinput_ng
+MimeType=
+Name[de_DE]=SmartInput NG
+Name=SmartInput NG
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

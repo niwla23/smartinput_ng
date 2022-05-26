@@ -1,4 +1,4 @@
-device: "USB VID:PID=1A86:7523 LOCATION=3-2.3"
+device: "VID:PID=1A86:7523 LOCATION=3-2.3"
 baudrate: 115200
 keys:
   "0": # play pause

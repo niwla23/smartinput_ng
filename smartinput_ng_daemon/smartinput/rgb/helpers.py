@@ -11,7 +11,6 @@ from typing import Tuple, Optional
 import serial
 import colorsys
 
-
 class RGBDevice:
     def __init__(self, baudrate=115200, timeout=0.1, port='/dev/ttyUSB0', serial_device: Optional[serial.Serial]=None) -> None:
         if serial_device:
@@ -22,7 +21,10 @@ class RGBDevice:
 
     def send_frame(self, colors):
         for i, color in enumerate(colors):
-            self.device.write(bytes(color))
+            try:
+                self.device.write(bytes(color))
+            except serial.serialutil.SerialException:
+                exit(1)
             if i == len(colors) - 1:
                 self.device.write(bytes([0x01]))
             else:

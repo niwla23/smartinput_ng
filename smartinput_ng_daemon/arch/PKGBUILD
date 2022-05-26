@@ -1,28 +1,22 @@
 # Maintainer: Alwin Lohrie <alwin@cloudserver.click>
 pkgname=smartinput_ng_daemon
-pkgver=v0.1.0
+pkgver=v0.2.0
 pkgrel=1
 pkgdesc="Daemon for SmartInput keystroke and rgb handling"
 arch=('any')
 url="https://github.com/niwla23/smartinput_ng"
 license=('MIT')
-depends=('python3')
+depends=('python3' 'tk')
 provides=('smartinput_ng_daemon')
-makedepends=('git' 'pip')
+makedepends=('git' 'python-pip' 'python-poetry')
 source=("smartinput_ng-git::git+https://github.com/niwla23/smartinput_ng.git")
 md5sums=('SKIP')
 
-pkgver() {
-  cd "$pkgname"
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
-}
-
 build() {
-    cd $srcdir/$pkgname
-    python setup.py build
+  cd smartinput_ng-git/$pkgname
+  poetry build
 }
 
 package() {
-    cd $srcdir/$pkgname
-    python setup.py install --root="$pkgdir"
+    pip3 install smartinput_ng-git/$pkgname/dist/*.whl
 }

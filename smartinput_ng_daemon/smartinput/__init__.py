@@ -10,7 +10,7 @@ from smartinput.rgb.helpers import RGBDevice
 from smartinput.server import run_in_thread
 from smartinput.settings import settings_manager
 import yaml
-
+import signal
 
 def main(config_path: str):
     with open(config_path, "r") as stream:
@@ -20,18 +20,22 @@ def main(config_path: str):
 
     port = None
     for device in comports():
-        if device.hwid == hwid:
+        if hwid in device.hwid:
             port = device.device
     print(port)
     if not port:
         raise Exception(f"device with hwid {hwid} not found.")
 
     device = serial.Serial(baudrate=config['baudrate'], timeout=.1, port=port)
+    print(device)
 
     run_in_thread(device)
 
     while True:
-        event = wait_for_event(device)
+        try:
+            event = wait_for_event(device)
+        except serial.serialutil.SerialException:
+            exit(1)
         handle_event(event, config['keys'])
 
 

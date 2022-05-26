@@ -2142,6 +2142,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "pypi2pkgbuild"
+version = "0.3"
+description = "A PyPI to PKGBUILD converter."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "pyrect"
 version = "0.2.0"
 description = "PyRect is a simple module with a Rect class for Pygame-like rectangular areas."
@@ -2317,7 +2325,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "e34052d10a1a47bab40c4d53dba08b743d3870e97cb2aa1f16a2c04a42398852"
+content-hash = "5b653b73b558e7ffa44781b23068046044bcecdfe9091c59257544efe1a493b6"
 
 [metadata.files]
 atomicwrites = [
@@ -3253,6 +3261,9 @@ pyparsing = [
 ]
 pyperclip = [
     {file = "pyperclip-1.8.2.tar.gz", hash = "sha256:105254a8b04934f0bc84e9c24eb360a591aaf6535c9def5f29d92af107a9bf57"},
+]
+pypi2pkgbuild = [
+    {file = "pypi2pkgbuild-0.3.tar.gz", hash = "sha256:eae7aa06c2a05175d5e6a37b91fc07d728a3d788c210af9028ecffb18b69fcdd"},
 ]
 pyrect = [
     {file = "PyRect-0.2.0.tar.gz", hash = "sha256:f65155f6df9b929b67caffbd57c0947c5ae5449d3b580d178074bffb47a09b78"},
