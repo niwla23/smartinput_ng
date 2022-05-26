@@ -110,7 +110,6 @@ class EffectSwitch:
     def set_effect(self, effect_name: str, options: dict):
         if effects.get(effect_name):
             effect = effects.get(effect_name)
-            print(self.rgb_process)
             if self.rgb_process.is_alive():
                 self.rgb_process.terminate()
             self.rgb_process = multiprocessing.Process(

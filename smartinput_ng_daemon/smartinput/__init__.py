@@ -32,7 +32,6 @@ def main(config_path: str):
 
     while True:
         event = wait_for_event(device)
-        print(event)
         handle_event(event, config['keys'])
 
 

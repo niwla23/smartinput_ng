@@ -15,7 +15,6 @@ import colorsys
 class RGBDevice:
     def __init__(self, baudrate=115200, timeout=0.1, port='/dev/ttyUSB0', serial_device: Optional[serial.Serial]=None) -> None:
         if serial_device:
-            print("hi")
             self.device = serial_device
         else:
             self.device = serial.Serial(

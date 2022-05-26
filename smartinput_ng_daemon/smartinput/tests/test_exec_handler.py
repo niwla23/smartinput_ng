@@ -9,7 +9,6 @@ class ExecHandlerTestCase(unittest.TestCase):
   def test_create_file(self):
     handler = ExecHandler()
     path = os.path.join("/tmp", str(uuid.uuid4()))
-    print(path)
     handler.set_params({'command': f"touch {path}"})
     event = Event("1", EventType.short_press)
 

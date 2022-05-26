@@ -3,7 +3,7 @@ authors = ["niwla23 <alwin@cloudserver.click>"]
 description = ""
 name = "smartinput_ng_daemon"
 packages = [{include = "smartinput"}]
-version = "0.1.0"
+version = "0.2.0"
 
 [tool.poetry.dependencies]
 Flask = "^2.1.2"

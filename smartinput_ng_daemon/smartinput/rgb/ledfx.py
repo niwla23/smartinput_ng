@@ -19,7 +19,6 @@ def callback(packet):
             framebuffer.append(tuple(color))
             color = []
             color.append(i)
-    print(framebuffer)
     device.send_frame(framebuffer)
     time.sleep(0.1)
     
